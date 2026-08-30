@@ -9,6 +9,7 @@ on:
     branches:
       - main
 
+
 jobs:
 
   backend-test:
@@ -26,8 +27,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
+        working-directory: backend
         run: |
-          pip install -r backend/requirements.txt
+          pip install -r requirements.txt
 
       - name: Run tests
         run: |
@@ -50,13 +52,16 @@ jobs:
 
       - name: Install dependencies
         working-directory: frontend
-        run: npm install
+        run: |
+          npm install
 
       - name: Build frontend
         working-directory: frontend
-        run: npm run build
+        run: |
+          npm run build
 
-    docker-build:
+
+  docker-build:
     name: Docker Build and Security Scan
 
     needs:
