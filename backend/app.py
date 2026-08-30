@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from db import db, get_database_url
-from models import Product, Order
+from backend.db import db, get_database_url
+from backend.models import Product, Order
 
 
 app = Flask(__name__)
