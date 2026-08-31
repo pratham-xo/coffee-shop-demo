@@ -87,7 +87,8 @@ jobs:
         run: |
           docker build \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/cicd_backend:${{ github.sha }} \
-            ./backend
+            -f backend/Dockerfile \
+             .
 
 
       - name: Build frontend image
