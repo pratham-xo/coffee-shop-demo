@@ -126,3 +126,26 @@ jobs:
         run: |
           docker push \
             ${{ secrets.DOCKERHUB_USERNAME }}/cicd_frontend:${{ github.sha }}
+      
+      
+      - name: Update GitOps repository
+        env:
+          GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          git clone https://x-access-token:${GITOPS_TOKEN}@github.com/pratham-xo/k8s-manifests.git gitops
+
+          cd gitops
+
+          sed -i "s|image: ${DOCKERHUB_USERNAME}/cicd_backend:.*|image: ${DOCKERHUB_USERNAME}/cicd_backend:${GITHUB_SHA}|" backend/deployment.yaml
+
+          sed -i "s|image: ${DOCKERHUB_USERNAME}/cicd_frontend:.*|image: ${DOCKERHUB_USERNAME}/cicd_frontend:${GITHUB_SHA}|" frontend/deployment.yaml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add backend/deployment.yaml frontend/deployment.yaml
+
+          git commit -m "Update application images to ${GITHUB_SHA}"
+
+          git push origin main
